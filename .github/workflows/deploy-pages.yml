@@ -24,11 +24,14 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npm run build
+      # GitHub Pages sirve archivos estáticos. El build habitual de este
+      # proyecto genera también un worker de Cloudflare; para Pages usamos
+      # el export estático nativo de Next.js en ./out.
+      - run: npx next build
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: ./dist/client
+          path: ./out
 
   deploy:
     needs: build
