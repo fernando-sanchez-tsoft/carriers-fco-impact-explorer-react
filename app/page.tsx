@@ -359,9 +359,44 @@ const cleanTree: TreeNode = {
             pendingMenu("lp-recibidos-registracion", "Registración"), pendingMenu("lp-recibidos-aprobacion", "Aprobación"), pendingMenu("lp-recibidos-anulacion", "Anulación"),
           ] },
         ],
+      },
+      form("liquidaciones-registracion", "Registración Liquidaciones · SIADFC35", "Título de pantalla: Liquidaciones Emitidas. Fuente actual: forms/SIADFC35.fmb (15/10/2026).", [
+        item("SIA_LIQ_FCO_19_VW", ["SELECT", "INSERT", "UPDATE", "DELETE"], "Vista Base 19 de cabecera para registrar y mantener liquidaciones emitidas.", "Modelo Base 19; UPDATE INTER.SIA_LIQ_FCO_19_VW confirmado en la fuente"),
+        item("SIA_DET_LIQ_FCO_19_VW", ["SELECT", "INSERT", "UPDATE", "DELETE"], "Vista Base 19 del detalle de liquidación; la fuente inserta detalles por la capa DB19.", "INSERT INTO INTER.SIA_DET_LIQ_FCO_19_VW confirmado"),
+        item("SIA_COMP_LIQ_FCO_19_VW", ["SELECT", "INSERT", "UPDATE", "DELETE"], "Vista Base 19 de composición entre liquidación, líquido producto y comprobante."),
+        item("SIA_LIQ_PROD_19_VW", ["SELECT"], "Líquidos producto/documentos internos disponibles para asociar."), item("SIA_COMPROBANTES_19_VW", ["SELECT"], "Comprobantes disponibles para asociar."), item("SIA_CONC_LIQ_FCO_19_VW", ["SELECT"], "Conceptos de liquidación."), item("SIA_ALGORITMOS_LIQ_FCO_19_VW", ["SELECT"], "Algoritmos aplicables."), item("SIA_INTER_19_VW", ["SELECT"], "Filtro y lookup de prestador."), item("SIA_PARAMETROS_GRALES", ["SELECT"], "Parámetros funcionales."),
+      ], "SIADFC35"),
+      { id: "liquidaciones-fco", name: "Liquidaciones FCO", kind: "menu", subtitle: "Responsabilidad", description: "Pantallas de aprobación, anulación, envío, control y carga relacionadas con liquidaciones FCO.", children: [
+            { id: "liquidaciones-gestion", name: "Aprobación / Anulación / Envío Liquidaciones", kind: "menu", subtitle: "Menú de aplicación", children: [
+              form("liquidaciones-aprobacion", "Aprobación Liquidaciones · SIADFC36", "Título de pantalla: Aprobación de Liquidaciones Emitidas. Fuente actual: forms/SIADFC36.fmb (28/09/2026).", [
+                item("SIA_LIQ_FCO_19_VW", ["SELECT", "UPDATE"], "Vista Base 19 de cabecera; aprueba la liquidación y registra fecha, usuario y número.", "UPDATE INTER.SIA_LIQ_FCO_19_VW SET FECHA_APROBACION, USUARIO_APROBACION, NUMERO_LIQUIDACION ..."),
+                item("SIA_DET_LIQ_FCO_19_VW", ["SELECT", "INSERT", "UPDATE", "DELETE"], "Vista Base 19 del detalle; las acciones Facturas a incluir/excluir ajustan los conceptos."), item("SIA_COMP_LIQ_FCO_19_VW", ["SELECT", "INSERT", "UPDATE", "DELETE"], "Vista Base 19 de composiciones; altas y bajas de inclusiones/exclusiones."), item("SIA_LIQ_PROD_19_VW", ["SELECT"], "Líquidos producto disponibles."), item("SIA_COMPROB_19_VW", ["SELECT"], "Comprobantes disponibles."), item("SIA_CONC_LIQ_FCO_19_VW", ["SELECT"], "Conceptos de liquidación."), item("SIA_INTER_19_VW", ["SELECT"], "Filtro de prestador."),
+              ], "SIADFC36"),
+              pendingMenu("liquidaciones-anulacion", "Anulación Liquidaciones"),
+              form("liquidaciones-envio", "Envío Liquidaciones · SIADFC38", "Título de pantalla: Envío de Liquidaciones Emitidas. Fuente disponible: forms/SIADFC38.fmb (24/01/2020).", [
+                item("SIA_LIQ_FCO_19_VW", ["SELECT", "UPDATE"], "Vista Base 19 de cabecera: el envío actualiza el estado, la fecha y el usuario de envío de la liquidación.", "Modelo Base 19 · acción Enviar; selección funcional sobre liquidaciones emitidas aprobadas"),
+                item("SIA_DET_LIQ_FCO_19_VW", ["SELECT"], "Vista Base 19 del detalle de la liquidación enviada."), item("SIA_COMP_LIQ_FCO_19_VW", ["SELECT"], "Composición de la liquidación."), item("SIA_LIQ_PROD_19_VW", ["SELECT"], "Líquidos producto asociados."), item("SIA_COMPROB_19_VW", ["SELECT"], "Comprobantes asociados."), item("SIA_INTER_19_VW", ["SELECT"], "Filtro de prestador."), item("SIA_PROCESOS_INFORME_WEB", ["INSERT"], "Encola la generación de reportes web al enviar cuando existe un reporte vigente para el servicio.", "INSERT INTO SIA_PROCESOS_INFORME_WEB; validación con SIA_REP_WEB_SERVICIO_FCO"), item("SIA_REP_WEB_SERVICIO_FCO", ["SELECT"], "Determina si hay un reporte web vigente para el servicio de la liquidación."),
+              ], "SIADFC38"),
+            ] },
+            { id: "liquidaciones-control", name: "Consultas FCO", kind: "menu", subtitle: "Menú de aplicación", children: [
+              form("liquidaciones-control-consulta", "Control de Liquidación · SIADFC16", "Título de pantalla: Control de Liquidación. Consulta parametrizable para Bancos Fijos.", [
+                item("SIA_CONSULTA_DINAMICA", ["SELECT"], "Definición de consultas y columnas dinámicas."), item("SIA_CAMPOS_REPORTE_FCO", ["SELECT"], "Campos disponibles para el reporte."), item("SIA_CONTROLES_PROCESO", ["SELECT"], "Controles de ejecución."), item("SIA_ESTADOS_CPTO_FCO", ["SELECT"], "Estados disponibles."), item("SIA_RELACIONES_CPTO_FCO", ["SELECT"], "Relaciones de conceptos FCO."), item("SIA_INTER_POR_TIPO", ["SELECT"], "Filtro de prestador por tipo."), item("SIA_INTERCONECTANTES", ["SELECT"], "Lookup de prestador."), item("SIA_SERVICIOS", ["SELECT"], "Lookup de servicio."), item("SIA_TIPO_INTERCONECTANTES", ["SELECT"], "Tipos de interconectante."), item("SIA_TMP_CTRL_LIQ_FCO", ["DELETE"], "Limpieza de controles temporales de la sesión al generar la consulta.", "DELETE FROM SIA_TMP_CTRL_LIQ_FCO WHERE USUARIO_ALTA = :PARAMETER.USR_SESSION"),
+              ], "SIADFC16"),
+            ] },
+            { id: "planos-fco", name: "Carga de Archivos Planos", kind: "menu", subtitle: "Menú de aplicación", children: [
+              form("planos-fco-control", "Consulta y Carga de Archivos Planos · SIADFC96", "Título de pantalla: Consulta y Carga de Archivos Planos. Fuente actual: forms/SIADFC96.fmb (19/10/2026).", [
+                item("SIA_PLANOS_REC_FCO_19_VW", ["SELECT", "UPDATE"], "Vista Base 19 de planos recibidos; marca EN PROCESO y asigna PID para ejecutar la carga.", "UPDATE INTER.SIA_PLANOS_REC_FCO_19_VW SET MARCA_PROC = 'EN PROCESO', PID = ..."), item("SIA_PERIODOS_TRAFICO", ["SELECT"], "Período de tráfico."), item("SIA_LET_INTERFACE_PROC_FCO", ["SELECT"], "Relación letra/interfaz/proceso."), item("SIA_INTERFACES_PROC_FCO", ["SELECT"], "Configuración de interfaces."), item("SIA_EJECUTABLES_PROC_FCO", ["SELECT"], "Ejecutables asociados."), item("SIA_ERRORES_FORMATO", ["SELECT"], "Errores de formato y su descripción."), item("SIA_PARAMETROS_GRALES", ["SELECT"], "Parámetros de rutas y ejecución."),
+              ], "SIADFC96"),
+            ] },
+            { id: "procesos-fco", name: "Procesos Generales - FCO", kind: "menu", subtitle: "Menú de aplicación", children: [
+              form("procesos-generacion-lp", "Generación de Líquidos Producto · SIADPR05", "Título de pantalla: Generación de Líquidos Producto. Fuente actual: forms/SIADPR05.fmb (25/09/2026).", [
+                item("SIA_PARAM_LP_19_VW", ["SELECT"], "Vista Base 19 de parametrización de generación por servicio, estado y tipo de documento.", "FROM INTER.SIA_PARAM_LP_19_VW"), item("SIA_DAEMON_19_VW", ["SELECT", "INSERT"], "Vista Base 19 de procesos daemon: consulta ejecuciones activas y crea el proceso de generación.", "SELECT FROM INTER.SIA_DAEMON_19_VW; alta funcional mediante INTER.SIA_PR05_DB19_PKG.CREAR_PROCESO"), item("SIA_INTER_19_VW", ["SELECT"], "Prestadores habilitados para ejecutar el proceso."), item("SIA_SERV_19_VW", ["SELECT"], "Servicios habilitados para ejecutar el proceso."), item("SIA_PARAM_GRAL_19_VW", ["SELECT"], "Parámetros generales Base 19."), item("SIA_CONTROLES_PROCESO", ["SELECT"], "Controles de ejecución."), item("SIA_PR05_DB19_PKG", ["INSERT"], "Paquete DB19 que obtiene secuencia y crea el proceso daemon; expone el PID al formulario.", "INTER.SIA_PR05_DB19_PKG.NEXT_DAEMON / CREAR_PROCESO"), item("SIA_USUARIO_INTERCONECTANTES", ["SELECT"], "Seguridad por usuario e interconectante."),
+              ], "SIADPR05"),
+            ] },
+          ] },
+        ],
       }],
     }],
-  }],
 };
 
 function flattenTree(node: TreeNode, parents: string[] = []) {
